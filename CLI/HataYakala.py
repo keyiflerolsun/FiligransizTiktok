@@ -1,16 +1,18 @@
 # Bu araç @keyiflerolsun tarafından | @KekikAkademi için yazılmıştır.
 
-from rich      import print
-from pathlib   import Path
-from sys       import exit
-from shutil    import rmtree
-from traceback import format_exc
+from contextlib import suppress
+from rich       import print
+from pathlib    import Path
+from sys        import exit
+from shutil     import rmtree
+from traceback  import format_exc
 
 def bellek_temizle():
-    [alt_dizin.unlink() for alt_dizin in Path(".").rglob("*.py[coi]")]
-    [alt_dizin.rmdir()  for alt_dizin in Path(".").rglob("__pycache__")]
-    [rmtree(alt_dizin)  for alt_dizin in Path(".").rglob("*.build")]
-    [alt_dizin.unlink() for alt_dizin in Path(".").rglob("*.bak")]
+    with suppress(Exception):
+        [alt_dizin.unlink() for alt_dizin in Path(".").rglob("*.py[coi]")]
+        [alt_dizin.rmdir()  for alt_dizin in Path(".").rglob("__pycache__")]
+        [rmtree(alt_dizin)  for alt_dizin in Path(".").rglob("*.build")]
+        [alt_dizin.unlink() for alt_dizin in Path(".").rglob("*.bak")]
 
 def cikis_yap(_print=True):
     if _print:
