@@ -1,0 +1,9 @@
+Kekik
+rich
+user_agents
+requests
+Flask
+flask_sitemap
+Flask_Cors
+waitress
+pytube

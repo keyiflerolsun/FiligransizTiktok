@@ -1,0 +1,76 @@
+{% extends "_html_taban.html" %}
+{% block icerik %}
+
+<form action="" method="post" onsubmit="return false">
+    <h3>Youtube Video İndirici</h3>
+    <div class="ara">
+        <input type="text" id="_link" placeholder="Youtube Video Link">
+        <button type="submit" onclick="video_getir()"><i class="fa fa-search" aria-hidden="true"></i></button>
+    </div>
+</form>
+
+<div class="yukleniyor">
+    Yükleniyor..
+</div>
+
+<div class="sonuc" style="display: none">
+    <div class="video">
+        <img id="gorsel" src="#" alt="">
+        <div class="detay">
+            <div class="baslik" id="baslik">#</div>
+            <!-- <div class="aciklama" id="aciklama">#</div> -->
+            <div class="yukleyen"><span><i class="fa fa-user-circle-o" aria-hidden="true"></i></span> <em id="yukleyen">#</em></div>
+            <div class="sure"><span><i class="fa fa-clock-o" aria-hidden="true"></i></span> <em id="sure">#</em></div>
+            <div class="izleyici"><span><i class="fa fa-eye" aria-hidden="true"></i></span> <em id="izleyici">#</em></div>
+        </div>
+    </div>
+
+    <ul id="kaynaklar"></ul>
+</div>
+
+<template id="video">
+    <li>
+        <div class="kalite">
+            <span><i class="fa fa-video-camera" aria-hidden="true"></i></span>
+            <em>{kalite}</em>
+        </div>
+        <div class="boyut">
+            <span><i class="fa fa-floppy-o" aria-hidden="true"></i></span>
+            <em>{boyut}</em>
+        </div>
+        <a href="{video}&title={baslik}" download="{baslik}" target="_blank"><i class="fa fa-download" aria-hidden="true"></i></a>
+    </li>
+</template>
+
+<script>
+    let kaynaklar  = $('#kaynaklar')
+    let yukleniyor = $('.yukleniyor')
+    let sonuc      = $('.sonuc')
+
+    function video_getir() {
+        yukleniyor.css('display', 'flex')
+        sonuc.hide()
+        let _link = $('#_link').val()
+
+        $.get(`/api/youtube_ver?_link=${_link}`, function (response) {
+            sonuc.fadeIn(300)
+            $('#baslik').text(response.baslik)
+            $('#gorsel').attr('src', response.gorsel)
+            // $('#aciklama').text(response.aciklama)
+            $('#yukleyen').text(response.yukleyen)
+            $('#sure').text(response.sure)
+            $('#izleyici').text(response.izleyici)
+            yukleniyor.css('display', 'none')
+
+            kaynaklar.html('')
+            $.each(response.videolar, function (key, source) {
+                let video = $('#video').html()
+                video = video.replace('{kalite}', source.kalite).replace('{boyut}', source.boyut).replace('{video}', source.video).replaceAll('{baslik}', response.baslik)
+                kaynaklar.append(video)
+            })
+
+        }, 'json')
+    }
+</script>
+
+{% endblock %}
